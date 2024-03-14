@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: taskrun-kaniko
+spec:
+  workspaces:
+  - name: source
+    persistentVolumeClaim:
+      claimName: shared-data
+  - name: dockerconfig
+    secret:
+      secretName: my-secret
+      items:
+      - key: .dockerconfigjson
+        path: config.json
+  taskRef:
+    name: kaniko
+  params:
+  - name: IMAGE
+    value: registry.cn-hangzhou.aliyuncs.com/cloud-native-cn/springboot-demo:v1.0.0
+  - name: CONTEXT
+    value: sourcecode
+  - name: DOCKERFILE
+    value: sourcecode/Dockerfile
+  - name: EXTRA_ARGS
+    value:
+    - --skip-tls-verify
+    - --skip-tls-verify-pull
+    - --cache
+    - --cache-dir=cache
