@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: taskrun-mavnen
+spec:
+  workspaces:
+  - name: source
+    persistentVolumeClaim:
+      claimName: shared-data
+  - name: maven-local-repo
+    persistentVolumeClaim:
+      claimName: maven-repo-data
+  - name: maven-settings
+    emptyDir: {}
+  taskRef:
+    name: maven
+  params:
+  - name: MAVEN_IMAGE
+    value: registry.cn-hangzhou.aliyuncs.com/cloud-native-cn/cloudbuild-mvn:3.8.7
+  - name: GOALS
+    value:
+    - -DskipTests
+    - -f
+    - sourcecode/pom.xml
+    - clean
+    - package
