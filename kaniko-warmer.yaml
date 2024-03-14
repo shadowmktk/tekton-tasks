@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kaniko-warmer
+spec:
+  params:
+    - name: DOCKERFILE
+      default: ./Dockerfile
+    - name: EXTRA_ARGS
+      type: array
+      default: []
+    - name: BUILDER_IMAGE
+      default: registry.cn-hangzhou.aliyuncs.com/cloud-native-cn/kaniko-warmer:latest
+  workspaces:
+    - name: source
+    - name: dockerconfig
+      optional: true
+      mountPath: /kaniko/.docker
+  steps:
+    - name: build-cache
+      workingDir: $(workspaces.source.path)
+      image: $(params.BUILDER_IMAGE)
+      args:
+        - $(params.EXTRA_ARGS)
+        - --dockerfile=$(params.DOCKERFILE) 

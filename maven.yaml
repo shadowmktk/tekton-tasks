@@ -78,6 +78,9 @@ spec:
   steps:
     - name: mvn-settings
       image: "registry.cn-hangzhou.aliyuncs.com/cloud-native-cn/ubi-minimal:8.2"
+      securityContext:
+        runAsUser: 65532
+        runAsNonRoot: true
       script: |
         #!/usr/bin/env bash
 
@@ -145,6 +148,9 @@ spec:
 
     - name: mvn-goals
       image: $(params.MAVEN_IMAGE)
+      securityContext:
+        runAsUser: 65532
+        runAsNonRoot: true
       workingDir: $(workspaces.source.path)/$(params.CONTEXT_DIR)
       command: ["/usr/bin/mvn"]
       args:
