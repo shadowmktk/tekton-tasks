@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: taskrun-kaniko-wermer
+spec:
+  workspaces:
+  - name: source
+    persistentVolumeClaim:
+      claimName: shared-data
+  taskRef:
+    name: kaniko-warmer
+  params:
+  - name: DOCKERFILE
+    value: sourcecode/Dockerfile
+  - name: EXTRA_ARGS
+    value:
+    - --cache-dir=cache
