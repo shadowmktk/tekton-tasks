@@ -1,0 +1,23 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: taskrun-git-clone
+spec:
+  workspaces:
+  - name: output 
+    persistentVolumeClaim:
+      claimName: shared-data
+  - name: ssh-directory
+    secret:
+      secretName: git-credentials
+  taskRef:
+    name: git-clone
+  params:
+  - name: gitInitImage
+    value: registry.cn-hangzhou.aliyuncs.com/cloud-native-cn/git-init:v0.40.2
+  - name: url
+    value: git@github.com:shadowmktk/springboot-demo.git
+  - name: revision
+    value: main
+  - name: subdirectory
+    value: sourcecode
